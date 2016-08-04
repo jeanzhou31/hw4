@@ -1,7 +1,87 @@
 body {
   font-family: "Roboto", sans-serif;
-  color: rgb(10%, 10%, 10%);
-  background: darken(white, 10%);
+  color: white;
+  background: url(http://www.intrawallpaper.com/static/images/cool-background.jpg);
   margin: 50px;
   font-size: 16px;
+}
+
+button {
+  background-color: rgb(255, 0, 117); /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px;
+  border-radius: 5px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 50px;
+}
+
+.navitem {
+  font-size: 30px;
+  padding: 5px;
+  color: white;
+}
+
+.homefull {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.homepost {
+  width: 70%;
+  border: solid black 2px;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+  background-color: rgb(90%, 90%, 90%);
+  display: flex;
+  justify-content: space-between;
+}
+
+.displaybox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titlerow {
+  font-size: 25px;
+  margin: 20px;
+}
+
+.contentrow {
+  font-size: 20px;
+  margin: 10px;
+}
+
+.tagsrow {
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.errorbox {
+  margin-top: 20px;
+  margin-left: 50px;
+}
+
+#gobutton {
+  padding: 10px;
 }
