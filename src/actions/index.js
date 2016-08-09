@@ -1,16 +1,13 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
 
-const ROOT_URL = 'http://jz-hw5.herokuapp.com';
+const ROOT_URL = 'http://jz-hw5.herokuapp.com/api/';
 const API_KEY = '';
 
 // keys for actiontypes
 export const ActionTypes = {
   FETCH_POSTS: 'FETCH_POSTS',
   FETCH_POST: 'FETCH_POST',
-  // CREATE_POST: 'CREATE_POST',
-  // UPDATE_POST: 'UPDATE_POST',
-  // DELETE_POST: 'DELETE_POST',
 };
 
 // fetch all posts
