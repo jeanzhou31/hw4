@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
 
-const ROOT_URL = 'http://localhost:9090/api';
+const ROOT_URL = 'https://jz-hw5-p2.herokuapp.com/api';
+// const ROOT_URL = 'http://localhost:9090/api';
 
 // keys for actiontypes
 export const ActionTypes = {

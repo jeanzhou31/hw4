@@ -118,7 +118,6 @@ class Show extends Component {
     if (this.state.error === 2) {
       errorText = 'Please fill out all fields!';
     }
-    console.log(errorText);
     if (this.state.editing === false) {
       if (this.state.initialize === false) {
         // state not initialized, use this.props.currentPost
