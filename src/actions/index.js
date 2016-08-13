@@ -1,19 +1,21 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
 
-const ROOT_URL = 'http://jz-hw5.herokuapp.com/api/';
-const API_KEY = '';
+const ROOT_URL = 'http://localhost:9090/api';
 
 // keys for actiontypes
 export const ActionTypes = {
   FETCH_POSTS: 'FETCH_POSTS',
   FETCH_POST: 'FETCH_POST',
+  AUTH_USER: 'AUTH_USER',
+  DEAUTH_USER: 'DEAUTH_USER',
+  AUTH_ERROR: 'AUTH_ERROR',
 };
 
 // fetch all posts
 export function fetchPosts() {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts${API_KEY}`).then(response => {
+    axios.get(`${ROOT_URL}/posts`).then(response => {
       dispatch({ type: 'FETCH_POSTS', payload: response.data });
     }).catch(error => {
       console.log('Error getting posts');
@@ -25,8 +27,8 @@ export function fetchPosts() {
 // create a new post
 export function createPost(post) {
   return (dispatch) => {
-    const fields = { title: post.title, content: post.content, tags: post.tags };
-    axios.post(`${ROOT_URL}/posts${API_KEY}`, fields).then(response => {
+    axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
+    .then(response => {
       browserHistory.push('/');
     }).catch(error => {
       console.log('Error creating post');
@@ -38,8 +40,8 @@ export function createPost(post) {
 // update a post
 export function updatePost(post) {
   return (dispatch) => {
-    const fields = { title: post.title, content: post.content, tags: post.tags };
-    axios.put(`${ROOT_URL}/posts/${post.id}${API_KEY}`, fields).then(response => {
+    axios.put(`${ROOT_URL}/posts/${post.id}`, post, { headers: { authorization: localStorage.getItem('token') } })
+    .then(response => {
       browserHistory.push(`/posts/${post.id}`);
     }).catch(error => {
       console.log('Error updating post');
@@ -51,7 +53,7 @@ export function updatePost(post) {
 // fetch a specific post
 export function fetchPost(id) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts/${id}${API_KEY}`).then(response => {
+    axios.get(`${ROOT_URL}/posts/${id}`).then(response => {
       dispatch({ type: 'FETCH_POST', payload: response.data });
     }).catch(error => {
       console.log('Error getting single post');
@@ -63,11 +65,55 @@ export function fetchPost(id) {
 // delete post
 export function deletePost(id) {
   return (dispatch) => {
-    axios.delete(`${ROOT_URL}/posts/${id}${API_KEY}`).then(response => {
+    axios.delete(`${ROOT_URL}/posts/${id}`, { headers: { authorization: localStorage.getItem('token') } })
+    .then(response => {
       browserHistory.push('/');
     }).catch(error => {
       console.log('Error deleting post');
       browserHistory.push('/error');
     });
+  };
+}
+
+// trigger to deauth if there is error
+// can also use in your error reducer if you have one to display an error message
+export function authError(error) {
+  return {
+    type: ActionTypes.AUTH_ERROR,
+    message: error,
+  };
+}
+
+export function signinUser(email, password) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/signin`, { email, password }).then(response => {
+      dispatch({ type: ActionTypes.AUTH_USER });
+      localStorage.setItem('token', response.data.token);
+      browserHistory.push('/');
+    }).catch(error => {
+      dispatch(authError(`Sign In Failed: ${error.response.data}`));
+    });
+  };
+}
+
+export function signupUser(email, password) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/signup`, { email, password }).then(response => {
+      dispatch({ type: ActionTypes.AUTH_USER });
+      localStorage.setItem('token', response.data.token);
+      browserHistory.push('/');
+    }).catch(error => {
+      dispatch(authError(`Sign Up Failed: ${error.response.data}`));
+    });
+  };
+}
+
+// deletes token from localstorage
+// and deauths
+export function signoutUser() {
+  return (dispatch) => {
+    localStorage.removeItem('token');
+    dispatch({ type: ActionTypes.DEAUTH_USER });
+    browserHistory.push('/');
   };
 }

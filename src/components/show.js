@@ -15,7 +15,8 @@ class Show extends Component {
       tags: '',
       editing: false,
       initialize: false,
-      error: false,
+      error: 0,
+      author: '',
     };
 
     this.delete = this.delete.bind(this);
@@ -48,24 +49,39 @@ class Show extends Component {
 
   // delete post
   delete() {
-    this.props.deletePost(this.props.params.id);
+    // if not authenticated, set error
+    if (!this.props.authenticated) {
+      this.setState({
+        error: 1,
+      });
+    } else {
+      this.props.deletePost(this.props.params.id);
+    }
   }
 
   // edit post
   edit() {
-    // if this is the first time editing, state must be initailized
-    if (this.state.initialize === false) {
+    // if not authenticated, set error
+    if (!this.props.authenticated) {
       this.setState({
-        title: this.props.currentPost.title,
-        content: this.props.currentPost.content,
-        tags: this.props.currentPost.tags,
-        editing: !this.state.editing,
-        initialize: true,
+        error: 1,
       });
     } else {
-      this.setState({
-        editing: !this.state.editing,
-      });
+      // if this is the first time editing, state must be initailized
+      if (this.state.initialize === false) {
+        this.setState({
+          title: this.props.currentPost.title,
+          content: this.props.currentPost.content,
+          tags: this.props.currentPost.tags,
+          editing: !this.state.editing,
+          initialize: true,
+          author: this.props.currentPost.author.email,
+        });
+      } else {
+        this.setState({
+          editing: !this.state.editing,
+        });
+      }
     }
   }
 
@@ -75,14 +91,14 @@ class Show extends Component {
     if (this.state.title.trim().length > 0 && this.state.content.trim().length > 0 && this.state.tags.trim().length > 0) {
       this.setState({
         editing: !this.state.editing,
-        error: false,
+        error: 0,
       });
       const post = { id: this.props.params.id, title: this.state.title, content: this.state.content, tags: this.state.tags };
       this.props.updatePost(post);
     } else {
       // if empty field, display error message
       this.setState({
-        error: true,
+        error: 2,
       });
     }
   }
@@ -90,15 +106,19 @@ class Show extends Component {
   // render function
   render() {
     if (this.props.currentPost == null) {
-      // if currentPost not yet fetched due to server lag
+      // if currenPost not yet fetched
       return (
         <div>Loading...</div>
       );
     }
     let errorText = '';
-    if (this.state.error === true) {
+    if (this.state.error === 1) {
+      errorText = 'Please sign in to edit or delete posts!';
+    }
+    if (this.state.error === 2) {
       errorText = 'Please fill out all fields!';
     }
+    console.log(errorText);
     if (this.state.editing === false) {
       if (this.state.initialize === false) {
         // state not initialized, use this.props.currentPost
@@ -113,9 +133,15 @@ class Show extends Component {
             <div className="tagsrow">
               <b>Tags:</b> {this.props.currentPost.tags}
             </div>
+            <div className="authorrow">
+              <b>Author:</b> {this.props.currentPost.author.email}
+            </div>
             <div>
               <button onClick={this.delete}>Delete</button>
               <button onClick={this.edit}>Edit</button>
+            </div>
+            <div>
+              {errorText}
             </div>
           </div>
         );
@@ -132,9 +158,15 @@ class Show extends Component {
             <div className="tagsrow">
               <b>Tags:</b> {this.state.tags}
             </div>
+            <div className="authorrow">
+              <b>Author:</b> {this.state.author}
+            </div>
             <div>
               <button onClick={this.delete}>Delete</button>
               <button onClick={this.edit}>Edit</button>
+            </div>
+            <div>
+              {errorText}
             </div>
           </div>
         );
@@ -167,6 +199,7 @@ class Show extends Component {
 const mapDispatchToProps = (state, action) => (
   {
     currentPost: state.posts.currentPost,
+    authenticated: state.auth.authenticated,
   }
 );
 
