@@ -1,11 +1,11 @@
-#HW 4 of CS52
+#HW 4 (blog) component of HW 5 part 2 (server) of CS52
 ## by Jean Zhou
 
 ---
-####App url: cs52-jeanzhou-hw4.surge.sh
+####App url: cs52-jeanzhou-hw5p2.surge.sh
 
-###General Comments: 
+###General Comments:
 
-I used React+Redux to create a blog that updates dynamically and connects to the API server hosted at: cs52-blog.herokuapp.com. This blog can list all posts, view a specific post in full, create new posts, edit existing posts, and delete posts. The content section of posts can render markdown.
+I used Express and Mongodb to create a CRUD api server for the React+Redux blog that I'd created for HW 4. The HW 4 blog was modified for this (branch hw5-auth). The server implements authentication (HW 5 branch part2). I got everything to worl. Users may sign up with any username that is not taken, and then sign in and sign out whenever. Only users who are signed in can create, edit, and delete posts.
 
-Additionally, for extra credit, I made the blog look more appealing, handle axios errors more gracefully, have input validation, and added a filter posts by tag functionality. When an axios error is found, the site redirects to "cs52-jeanzhou-hw4.surge.sh/error," where there is an error message for the user. For input validation during creating and editing posts, an error message comes up below the submit button that tells the user to input all fields before the form will submit. And for filtering, posts are filtered by tags that are delimited by commas. So, a post with the tags "new, words" will be included in filters of both "new" and "words," but not "new words."  Meanwhile a post with the tag "new words" will only be included in a filter of "new words," not "new" or "words."
+For extra credit, appropriate error messages are displayed, such as if a user tries to edit or delete posts when not signed in.
